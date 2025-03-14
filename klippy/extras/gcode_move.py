@@ -162,7 +162,7 @@ class GCodeMove:
         self.absolute_coord = False
     def cmd_G92(self, gcmd):
         # Set position
-        offsets = [ gcmd.get_float(a, None) for a in 'XYZE' ]
+        offsets = [ gcmd.get_float(a, None) for a in 'XYZUWE' ]
         for i, offset in enumerate(offsets):
             if offset is not None:
                 if i == 3:
@@ -189,7 +189,7 @@ class GCodeMove:
     cmd_SET_GCODE_OFFSET_help = "Set a virtual offset to g-code positions"
     def cmd_SET_GCODE_OFFSET(self, gcmd):
         move_delta = [0., 0., 0., 0.]
-        for pos, axis in enumerate('XYZE'):
+        for pos, axis in enumerate('XYZUWE'):
             offset = gcmd.get_float(axis, None)
             if offset is None:
                 offset = gcmd.get_float(axis + '_ADJUST', None)
@@ -255,13 +255,13 @@ class GCodeMove:
         kinfo = zip("XYZ", kin.calc_position(dict(cinfo)))
         kin_pos = " ".join(["%s:%.6f" % (a, v) for a, v in kinfo])
         toolhead_pos = " ".join(["%s:%.6f" % (a, v) for a, v in zip(
-            "XYZE", toolhead.get_position())])
+            "XYZUWE", toolhead.get_position())])
         gcode_pos = " ".join(["%s:%.6f"  % (a, v)
-                              for a, v in zip("XYZE", self.last_position)])
+                              for a, v in zip("XYZUWE", self.last_position)])
         base_pos = " ".join(["%s:%.6f"  % (a, v)
-                             for a, v in zip("XYZE", self.base_position)])
+                             for a, v in zip("XYZUWE", self.base_position)])
         homing_pos = " ".join(["%s:%.6f"  % (a, v)
-                               for a, v in zip("XYZ", self.homing_position)])
+                               for a, v in zip("XYZUW", self.homing_position)])
         gcmd.respond_info("mcu: %s\n"
                           "stepper: %s\n"
                           "kinematic: %s\n"

@@ -21,7 +21,7 @@ cart_stepper_w_calc_position(struct stepper_kinematics *sk, struct move *m
 }
 
 struct stepper_kinematics * __visible
-rotuv_stepper_alloc(char axis)
+rotuw_stepper_alloc(char axis)
 {
     struct stepper_kinematics *sk = malloc(sizeof(*sk));
     memset(sk, 0, sizeof(*sk));

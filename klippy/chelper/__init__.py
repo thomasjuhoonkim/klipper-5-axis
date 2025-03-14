@@ -112,7 +112,7 @@ defs_kin_corexy = """
 """
 
 defs_kin_rotuw = """
-    struct stepper_kinematics *rotuv_stepper_alloc(char type);
+    struct stepper_kinematics *rotuw_stepper_alloc(char type);
 """
 
 defs_kin_corexz = """

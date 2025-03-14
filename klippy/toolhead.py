@@ -3,6 +3,7 @@
 # Copyright (C) 2016-2024  Kevin O'Connor <kevin@koconnor.net>
 #
 # This file may be distributed under the terms of the GNU GPLv3 license.
+from collections import namedtuple
 import math, logging, importlib
 import mcu, chelper, kinematics.extruder
 
@@ -267,7 +268,10 @@ class ToolHead:
         self.step_generators = []
         # Create kinematics class
         gcode = self.printer.lookup_object('gcode')
-        self.Coord = gcode.Coord
+        
+        fields_to_keep = [f for f in gcode.Coord._fields if f not in ('u', 'w')]
+        self.ToolheadCoord = namedtuple('ToolheadCoord', fields_to_keep)
+
         self.extruder = kinematics.extruder.DummyExtruder(self.printer)
         kin_name = config.get('kinematics')
         try:
@@ -577,7 +581,7 @@ class ToolHead:
                      'stalls': self.print_stall,
                      'estimated_print_time': estimated_print_time,
                      'extruder': self.extruder.get_name(),
-                     'position': self.Coord(*self.commanded_pos),
+                     'position': self.ToolheadCoord(*self.commanded_pos),
                      'max_velocity': self.max_velocity,
                      'max_accel': self.max_accel,
                      'minimum_cruise_ratio': self.min_cruise_ratio,

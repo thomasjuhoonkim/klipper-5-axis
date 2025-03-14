@@ -3,6 +3,7 @@
 # Copyright (C) 2021  Kevin O'Connor <kevin@koconnor.net>
 #
 # This file may be distributed under the terms of the GNU GPLv3 license.
+import collections
 import logging
 import chelper
 from . import bulk_sensor
@@ -137,10 +138,10 @@ class PrinterMotionReport:
         self.trapqs = {}
         # get_status information
         self.next_status_time = 0.
-        toolhead = self.printer.lookup_object('toolhead')
         # gcode = self.printer.lookup_object('gcode')
+        Coord = collections.namedTuple("Coord", ('x', 'y', 'z', 'e'))
         self.last_status = {
-            'live_position': toolhead.ToolheadCoord(0., 0., 0., 0., 0., 0.),
+            'live_position': Coord(0., 0., 0., 0.),
             'live_velocity': 0., 'live_extruder_velocity': 0.,
             'steppers': [], 'trapq': [],
         }

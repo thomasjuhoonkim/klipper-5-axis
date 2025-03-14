@@ -1,4 +1,4 @@
-// CoreXY UV rotational kinematics stepper pulse time generation
+// CoreXY UW rotational kinematics stepper pulse time generation
 
 #include <stdlib.h> // malloc
 #include <string.h> // memset
@@ -14,10 +14,10 @@ cart_stepper_u_calc_position(struct stepper_kinematics *sk, struct move *m
 }
 
 static double
-cart_stepper_v_calc_position(struct stepper_kinematics *sk, struct move *m
+cart_stepper_w_calc_position(struct stepper_kinematics *sk, struct move *m
                             , double move_time)
 {
-    return move_get_coord(m, move_time).v;
+    return move_get_coord(m, move_time).w;
 }
 
 struct stepper_kinematics * __visible
@@ -29,8 +29,8 @@ rotuv_stepper_alloc(char axis)
         sk->calc_position_cb = cart_stepper_u_calc_position;
         sk->active_flags = AF_U;
     } else if (axis == 'v') {
-        sk->calc_position_cb = cart_stepper_v_calc_position;
-        sk->active_flags = AF_V;
+        sk->calc_position_cb = cart_stepper_w_calc_position;
+        sk->active_flags = AF_W;
     }
     return sk;
 }

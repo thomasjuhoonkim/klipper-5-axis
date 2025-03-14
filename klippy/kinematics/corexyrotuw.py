@@ -3,15 +3,15 @@ import math
 import stepper
 
 
-class CoreXYRotUVKinematics:
+class CoreXYRotUWKinematics:
     def __init__(self, toolhead, config):
         # Setup translation axis rails
         self.rails = [
             stepper.LookupMultiRail(config.getsection("stepper_" + n)) for n in "xyz"
         ]
-        # Setup rotation axes u and v
+        # Setup rotation axes u and w
         self.rotors = [
-            stepper.LookupMultiRail(config.getsection("stepper_" + n)) for n in "uv"
+            stepper.LookupMultiRail(config.getsection("stepper_" + n)) for n in "uw"
         ]
 
         # something related to adding endstops on x and y
@@ -20,12 +20,12 @@ class CoreXYRotUVKinematics:
         for s in self.rails[0].get_steppers():
             self.rails[1].get_endstops()[0][0].add_stepper(s)
 
-        # c memory injection for xyzuv
+        # c memory injection for xyzuw
         self.rails[0].setup_itersolve("corexy_stepper_alloc", b"+")
         self.rails[1].setup_itersolve("corexy_stepper_alloc", b"-")
         self.rails[2].setup_itersolve("cartesian_stepper_alloc", b"z")
-        self.rotors[0].setup_itersolve("rotuv_stepper_alloc", b"u")
-        self.rotors[1].setup_itersolve("rotuv_stepper_alloc", b"v")
+        self.rotors[0].setup_itersolve("rotuw_stepper_alloc", b"u")
+        self.rotors[1].setup_itersolve("rotuw_stepper_alloc", b"w")
 
         # event handler for steppers & emergency stop
         for s in self.get_steppers():
@@ -44,10 +44,10 @@ class CoreXYRotUVKinematics:
             "max_z_accel", max_accel, above=0.0, maxval=max_accel
         )
 
-        # normalized arbitrary limits for xyzuv
+        # normalized arbitrary limits for xyzuw
         self.limits = [(1.0, -1.0)] * 5
 
-        # axes min and max for xyzuv
+        # axes min and max for xyzuw
         ranges = [r.get_range() for r in self.rails]
         self.axes_min = toolhead.Coord(*[r[0] for r in ranges], e=0.0)
         self.axes_max = toolhead.Coord(*[r[1] for r in ranges], e=0.0)
@@ -135,7 +135,7 @@ class CoreXYRotUVKinematics:
 
     # current status, nothing special
     def get_status(self, eventtime):
-        axes = [a for a, (l, h) in zip("xyzuv", self.limits) if l <= h]
+        axes = [a for a, (l, h) in zip("xyzuw", self.limits) if l <= h]
         return {
             "homed_axes": "".join(axes),
             "axis_minimum": self.axes_min,
@@ -144,4 +144,4 @@ class CoreXYRotUVKinematics:
 
 
 def load_kinematics(toolhead, config):
-    return CoreXYRotUVKinematics(toolhead, config)
+    return CoreXYRotUWKinematics(toolhead, config)

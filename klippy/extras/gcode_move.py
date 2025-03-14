@@ -114,7 +114,7 @@ class GCodeMove:
         # Move
         params = gcmd.get_command_parameters()
         try:
-            for pos, axis in enumerate('XYZUV'):
+            for pos, axis in enumerate('XYZUW'):
                 if axis in params:
                     v = float(params[axis])
                     if not self.absolute_coord:

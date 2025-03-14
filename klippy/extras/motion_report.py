@@ -225,7 +225,7 @@ class PrinterMotionReport:
                 evelocity = velocity
         # Report status
         self.last_status = dict(self.last_status)
-        self.last_status['live_position'] = toolhead.ToolheadCoord(*(xyzpos + epos))
+        self.last_status['live_position'] = toolhead.Coord(*(xyzpos + epos))
         self.last_status['live_velocity'] = xyzvelocity
         self.last_status['live_extruder_velocity'] = evelocity
         return self.last_status

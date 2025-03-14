@@ -138,9 +138,8 @@ class PrinterMotionReport:
         # get_status information
         self.next_status_time = 0.
         gcode = self.printer.lookup_object('gcode')
-        self.Coord = gcode.Coord
         self.last_status = {
-            'live_position': self.Coord(0., 0., 0., 0., 0., 0.),
+            'live_position': gcode.Coord(*[0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
             'live_velocity': 0., 'live_extruder_velocity': 0.,
             'steppers': [], 'trapq': [],
         }
